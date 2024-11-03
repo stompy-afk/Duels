@@ -1,4 +1,4 @@
-name: untitled3
+name: Duels
 version: '1.0-SNAPSHOT'
-main: lol.stompy.untitled3.Untitled3
+main: lol.stompy.duels.Duels
 api-version: '1.21'
