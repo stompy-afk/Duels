@@ -11,6 +11,10 @@ public class sLocation {
 
     public static Location stringToLocation(String string) {
         String[] args = string.split(",");
+
+        if (args.length != 6)
+            return null;
+
         return new Location(Bukkit.getWorld(args[0]), Double.parseDouble(args[1]), Double.parseDouble(args[2]), Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]));
     }
 

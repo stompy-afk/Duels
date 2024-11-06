@@ -28,4 +28,17 @@ public class Team {
         this.members = new ArrayList<>();
     }
 
+    /**
+     * kicks a member of the team
+     *
+     * @param profile profile to kick of the team
+     */
+
+    public final void kick(Profile profile) {
+        if (!members.contains(profile))
+            return;
+
+        profile.setTeam(null);
+    }
+
 }

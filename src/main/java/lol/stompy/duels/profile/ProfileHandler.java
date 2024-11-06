@@ -25,6 +25,41 @@ public class ProfileHandler {
     }
 
     /**
+     * loads a profile
+     *
+     * @param profile profile to load
+     */
+
+    public final void load(Profile profile) {
+
+    }
+
+    /**
+     * handles the removal of a profile
+     *
+     * @param profile profile to handle removal off
+     */
+
+    public final void handleRemoval(Profile profile) {
+        if (profile.getTeam() != null)
+            profile.getTeam().kick(profile);
+
+        this.save(profile);
+        profileMap.remove(profile.getUuid());
+    }
+
+    /**
+     * saves a profile
+     *
+     * @param profile profile to save
+     */
+
+    private void save(Profile profile) {
+
+    }
+
+
+    /**
      * gets a profile from the map
      *
      * @param uuid uuid of profile

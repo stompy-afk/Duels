@@ -1,14 +1,16 @@
 package lol.stompy.duels.arena;
 
+import lombok.Getter;
 import org.bukkit.Location;
 
+@Getter
 public class Arena {
 
     private final String name;
     private final ArenaMapper arenaMapper;
 
     /**
-     * creates an arena
+     * Creates an arena
      *
      * @param name name of arena
      * @param arenaMapper arena mapper

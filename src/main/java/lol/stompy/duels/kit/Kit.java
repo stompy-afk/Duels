@@ -1,5 +1,6 @@
 package lol.stompy.duels.kit;
 
+import lol.stompy.duels.profile.Profile;
 import lol.stompy.duels.util.Serializer;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +8,7 @@ import org.bson.Document;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Setter
 @Getter
@@ -29,7 +30,7 @@ public class Kit {
     /**
      * creates the kit with the inventory of the player
      *
-     * @param name name of the kit
+     * @param name   name of the kit
      * @param player player to get inventory off
      */
 
@@ -49,6 +50,26 @@ public class Kit {
     public final void apply(Player player) {
         player.getInventory().setContents(this.contents);
         player.getInventory().setArmorContents(this.armorContents);
+    }
+
+    /**
+     * applies all kit books to the player
+     *
+     * @param profile profile of the player
+     * @param player player to apply kit books to
+     */
+
+    public final void applyKitBooks(Profile profile, Player player) {
+        player.getInventory().addItem(new KitBook(this, contents, armorContents).getKitBook(0));
+
+        final AtomicInteger i = new AtomicInteger(1);
+
+        profile.getKitBooks().forEach(kitBook -> {
+            if (kitBook.getKit().getName().equalsIgnoreCase(this.name)) {
+                player.getInventory().addItem(new KitBook(this, contents, armorContents).getKitBook(i.get()));
+                i.getAndIncrement();
+            }
+        });
     }
 
     /**
