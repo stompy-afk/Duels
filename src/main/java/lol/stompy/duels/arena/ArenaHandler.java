@@ -1,8 +1,13 @@
 package lol.stompy.duels.arena;
 
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
 import lol.stompy.duels.Duels;
+import lol.stompy.duels.kit.Kit;
+import org.bson.Document;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +22,7 @@ public class ArenaHandler {
     private final Random random;
 
     /**
-     * Arena handler - handles all related arena activites
+     * Arena handler - handles all related arena activities
      *
      * @param duels instance of main
      */
@@ -30,6 +35,63 @@ public class ArenaHandler {
 
         this.arenas = new ArrayList<>();
         this.tempArenas = new ArrayList<>();
+    }
+
+    /**
+     * loads all arenas
+     */
+
+    private void load() {
+        duels.getServer().getScheduler().runTaskAsynchronously(duels, () -> {
+            for (Document document : duels.getMongoHandler().getArenas().find())
+                arenas.add(new Arena(document));
+        });
+    }
+
+    /**
+     * handles the removal of the arena
+     *
+     * @param arena kit to remove
+     * @param async to do task async or not
+     */
+
+    public final void handleRemoval(Arena arena, boolean async) {
+        arenas.remove(arena);
+
+        if (async) {
+            duels.getServer().getScheduler().runTaskAsynchronously(duels, () -> handleRemoval(arena, false));
+            return;
+        }
+
+        Document document = duels.getMongoHandler().getArenas().find(Filters.eq("_id", arena.getName())).first();
+
+        if (document == null)
+            return;
+
+        duels.getMongoHandler().getArenas().deleteOne(document);
+    }
+
+    /**
+     * saves an arena
+     *
+     * @param arena kit to save
+     * @param async to do task async or not
+     */
+
+    private void save(Arena arena, boolean async) {
+        if (async) {
+            duels.getServer().getScheduler().runTaskAsynchronously(duels, () -> save(arena, false));
+            return;
+        }
+
+        final Document document = duels.getMongoHandler().getArenas().find(Filters.eq("_id", arena.getName())).first();
+
+        if (document == null) {
+            duels.getMongoHandler().getArenas().insertOne(arena.toBson());
+            return;
+        }
+
+        duels.getMongoHandler().getArenas().replaceOne(document, arena.toBson(), new ReplaceOptions().upsert(true));
     }
 
     /**

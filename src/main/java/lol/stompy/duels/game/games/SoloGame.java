@@ -87,7 +87,7 @@ public class SoloGame extends Game<Profile> {
         loser.getCooldowns().forEach(simpleCooldown -> simpleCooldown.setExpire(0));
 
         if (gameEndReason.equals(GameEndReason.PLAYER_QUIT))
-            Duels.getInstance().getProfileHandler().handleRemoval(loser);
+            Duels.getInstance().getProfileHandler().handleRemoval(loser, true);
     }
 
 

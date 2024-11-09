@@ -3,6 +3,7 @@ package lol.stompy.duels;
 import lol.stompy.duels.arena.ArenaHandler;
 import lol.stompy.duels.game.GameHandler;
 import lol.stompy.duels.kit.KitHandler;
+import lol.stompy.duels.mongo.MongoHandler;
 import lol.stompy.duels.profile.ProfileHandler;
 import lol.stompy.duels.util.CC;
 import lombok.Getter;
@@ -18,6 +19,8 @@ public class Duels extends JavaPlugin {
     private KitHandler kitHandler;
     private GameHandler gameHandler;
     private ArenaHandler arenaHandler;
+
+    private MongoHandler mongoHandler;
 
     /**
      * plugin loading logic
@@ -35,14 +38,17 @@ public class Duels extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.getServer().getConsoleSender().sendMessage(CC.translate("&7[&aTP&&] &fLoading kits, profiles, arenas..."));
+
+        this.mongoHandler = new MongoHandler(this);
+
+        this.getServer().getConsoleSender().sendMessage(CC.translate("&7[&aDuels&&] &fLoading kits, profiles, arenas..."));
 
         this.kitHandler = new KitHandler(this);
         this.arenaHandler = new ArenaHandler(this);
         this.profileHandler = new ProfileHandler(this);
         this.gameHandler = new GameHandler(this);
 
-        this.getServer().getConsoleSender().sendMessage(CC.translate("&7[&aTP&&] &fLoading all successfully..."));
+        this.getServer().getConsoleSender().sendMessage(CC.translate("&7[&aDuels&&] &fLoading all successfully..."));
 
     }
 }

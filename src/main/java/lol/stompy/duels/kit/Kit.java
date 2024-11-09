@@ -4,6 +4,7 @@ import lol.stompy.duels.profile.Profile;
 import lol.stompy.duels.util.Serializer;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import org.bson.Document;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -42,6 +43,19 @@ public class Kit {
     }
 
     /**
+     * creates a kit out of a document
+     *
+     * @param document document to create kit off
+     */
+
+    @SneakyThrows
+    public Kit(Document document) {
+        this.name = document.getString("_id");
+        this.contents = Serializer.itemStackArrayFromBase64(document.getString("contents"));
+        this.armorContents = Serializer.itemStackArrayFromBase64(document.getString("armorContents"));
+    }
+
+    /**
      * applies to player
      *
      * @param player player to set kit to
@@ -56,7 +70,7 @@ public class Kit {
      * applies all kit books to the player
      *
      * @param profile profile of the player
-     * @param player player to apply kit books to
+     * @param player  player to apply kit books to
      */
 
     public final void applyKitBooks(Profile profile, Player player) {
@@ -80,8 +94,8 @@ public class Kit {
 
     public final Document toBson() {
         return new Document("_id", this.name)
-                .append("contents", contents == null ? "null" : Serializer.itemStackArrayToBase64(contents))
-                .append("armorContents", armorContents == null ? "null" : Serializer.itemStackArrayToBase64(armorContents));
+                .append("contents", Serializer.itemStackArrayToBase64(contents))
+                .append("armorContents", Serializer.itemStackArrayToBase64(armorContents));
     }
 
 }

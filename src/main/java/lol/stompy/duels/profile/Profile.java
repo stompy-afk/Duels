@@ -1,10 +1,12 @@
 package lol.stompy.duels.profile;
 
+import lol.stompy.duels.Duels;
 import lol.stompy.duels.kit.KitBook;
 import lol.stompy.duels.team.Team;
 import lol.stompy.duels.util.cooldown.SimpleCooldown;
 import lombok.Getter;
 import lombok.Setter;
+import org.bson.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,38 @@ public class Profile {
         this.kitBooks = new ArrayList<>();
     }
 
+    /**
+     * creates the profile from a document
+     *
+     * @param document document to make profile from
+     * @param duels instance of main
+     */
+
+    public Profile(Document document, Duels duels) {
+        this.uuid = UUID.fromString(document.getString("_id"));
+        this.wins = document.getInteger("wins");
+        this.losses = document.getInteger("losses");
+
+        this.kitBooks = new ArrayList<>();
+        final List<String> kitBooks = document.getList("kitBooks", String.class);
+        kitBooks.forEach(s -> this.kitBooks.add(new KitBook(s, duels)));
+    }
+
+    /**
+     * puts all the profile's data into a document
+     *
+     * @return {@link Document}
+     */
+
+    public final Document toBson() {
+        final List<String> kitBooks = new ArrayList<>();
+        this.kitBooks.forEach(kitBook -> kitBooks.add(kitBook.toString()));
+
+        return new Document("_id", uuid.toString())
+                .append("wins", wins)
+                .append("losses", losses)
+                .append("kitBooks", kitBooks);
+    }
 
 
 }
